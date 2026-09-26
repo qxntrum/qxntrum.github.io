@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QXNTRUM — Danylo Heraimovych</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+  :root{
+    --bg:#08080a;
+    --bg-2:#0f0f13;
+    --card:#131318;
+    --fg:#f2f0ed;
+    --fg-dim:#8f8c94;
+    --purple:#8b5cf6;
+    --pink:#ff4fa3;
+    --orange:#ff7a45;
+    --green:#3ee08a;
+    --line:rgba(255,255,255,0.1);
+    --line-soft:rgba(255,255,255,0.06);
+    --radius:20px;
+    --mono:'IBM Plex Mono',monospace;
+    --sans:'Space Grotesk',sans-serif;
+    --display:'Archivo Black',sans-serif;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:var(--sans);
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  ::selection{background:var(--purple);color:#fff;}
+
+  .mesh{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(650px 550px at 8% 6%, rgba(139,92,246,0.18), transparent 60%),
+      radial-gradient(750px 600px at 92% 24%, rgba(255,79,163,0.11), transparent 60%),
+      radial-gradient(700px 550px at 25% 90%, rgba(255,122,69,0.08), transparent 60%);
+  }
+
+  body::before{
+    content:"";
+    position:fixed;inset:0;pointer-events:none;z-index:50;opacity:0.5;
+    background-image:repeating-linear-gradient(
+      0deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px,
+      transparent 1px, transparent 3px
+    );
+  }
+
+  a{color:inherit;}
+  main, header, section, footer, nav{position:relative;z-index:1;}
+
+  .wrap{max-width:1200px;margin:0 auto;padding:0 32px;}
+
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--fg-dim);
+    display:flex;align-items:center;gap:10px;
+  }
+  .eyebrow::before{
+    content:"";width:20px;height:1px;background:var(--purple);
+  }
+
+  /* ---------- PARENTAL ADVISORY BANNER ---------- */
+  .pa-banner{
+    position:fixed;top:0;left:0;right:0;z-index:45;
+    height:32px;background:#000;
+    border-bottom:1px solid var(--line);
+    overflow:hidden;display:flex;align-items:center;
+  }
+  .pa-banner-track{display:flex;align-items:center;white-space:nowrap;animation:marquee 24s linear infinite;}
+  .pa-banner-track span{
+    font-family:var(--mono);font-weight:600;font-size:11px;
+    letter-spacing:0.14em;color:var(--fg-dim);padding:0 22px;
+  }
+  .pa-banner-track span b{color:var(--fg);font-weight:600;}
+  .pa-banner-track span::after{content:"/";margin-left:22px;color:#3a3840;}
+  @keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:fixed;top:32px;left:0;right:0;z-index:40;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:18px 32px;
+    background:rgba(8,8,10,0.5);
+    backdrop-filter:blur(16px) saturate(140%);
+    -webkit-backdrop-filter:blur(16px) saturate(140%);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .nav-mark{
+    font-family:var(--display);font-size:15px;letter-spacing:0.01em;
+    display:flex;align-items:center;gap:10px;
+  }
+  .nav-dot{width:6px;height:6px;border-radius:50%;background:var(--purple);box-shadow:0 0 14px 3px var(--purple);}
+  .nav-links{display:flex;gap:2px;align-items:center;}
+  .nav-links a{
+    text-decoration:none;color:var(--fg-dim);
+    font-family:var(--mono);font-size:12px;letter-spacing:0.04em;
+    padding:9px 16px;border-radius:100px;position:relative;
+    transition:color .25s;
+  }
+  .nav-links a:hover{color:var(--fg);}
+  .nav-links a::after{
+    content:"";position:absolute;left:16px;right:16px;bottom:6px;height:1px;
+    background:var(--purple);transform:scaleX(0);transform-origin:left;
+    transition:transform .25s;
+  }
+  .nav-links a:hover::after{transform:scaleX(1);}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100svh;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:180px 32px 90px;
+  }
+  .hero-inner{
+    max-width:1200px;margin:0 auto;width:100%;
+    display:grid;grid-template-columns:1.25fr 0.9fr;gap:56px;align-items:center;
+  }
+
+  .hero-eyebrow-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px;}
+  .hero-index{font-family:var(--mono);font-size:12px;color:var(--fg-dim);}
+
+  .glitchwrap{position:relative;display:inline-block;}
+  h1.title{
+    font-family:var(--display);
+    font-size:clamp(52px, 8.4vw, 132px);
+    line-height:0.86;letter-spacing:-0.01em;
+    position:relative;color:var(--fg);
+  }
+  h1.title .layer{position:absolute;top:0;left:0;width:100%;opacity:0;pointer-events:none;}
+  h1.title .layer.purple{color:var(--purple);mix-blend-mode:screen;}
+  h1.title .layer.orange{color:var(--orange);mix-blend-mode:screen;}
+  @keyframes glitchshift{
+    0%,100%{opacity:0;transform:translate(0,0);}
+    41%{opacity:0;}
+    42%{opacity:.7;transform:translate(-3px,1px);}
+    43%{opacity:.7;transform:translate(3px,-1px);}
+    44%{opacity:0;transform:translate(0,0);}
+    71%{opacity:0;}
+    72%{opacity:.55;transform:translate(2px,0);}
+    74%{opacity:0;}
+  }
+  h1.title .layer.purple{animation:glitchshift 6.5s infinite;}
+  h1.title .layer.orange{animation:glitchshift 6.5s infinite;animation-delay:.08s;}
+
+  .hero-sub{
+    margin-top:28px;max-width:440px;font-size:17px;line-height:1.65;color:var(--fg-dim);
+  }
+  .hero-real-name{
+    margin-top:20px;font-family:var(--mono);font-size:12.5px;color:var(--fg-dim);letter-spacing:0.02em;
+  }
+  .hero-real-name b{color:var(--fg);font-weight:500;}
+
+  .hero-actions{margin-top:38px;}
+  .hero-cta{
+    display:inline-flex;align-items:center;gap:10px;
+    background:var(--fg);color:#0a0a0c;
+    font-weight:600;font-size:14px;
+    padding:15px 24px;border-radius:100px;
+    text-decoration:none;white-space:nowrap;
+    transition:transform .2s, box-shadow .2s;
+  }
+  .hero-cta:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(139,92,246,0.4);}
+  .platform-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+  .platform-pill{
+    font-family:var(--mono);font-size:12px;color:var(--fg-dim);
+    background:rgba(255,255,255,0.04);border:1px solid var(--line);
+    padding:9px 15px;border-radius:100px;text-decoration:none;white-space:nowrap;
+    transition:color .2s, border-color .2s, background .2s, transform .2s;
+  }
+  .platform-pill:hover{color:var(--fg);border-color:rgba(139,92,246,0.5);background:rgba(139,92,246,0.1);transform:translateY(-2px);}
+
+  /* hero visual: cover art frame */
+  .hero-visual{position:relative;display:flex;justify-content:center;}
+  .hero-visual-frame{
+    position:relative;width:100%;max-width:340px;aspect-ratio:1/1.08;
+    border-radius:24px;overflow:hidden;
+    border:1px solid var(--line);
+    box-shadow:0 30px 80px -20px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.02);
+  }
+  .hero-visual-frame img{width:100%;height:100%;object-fit:cover;display:block;}
+  .hero-visual-glow{
+    position:absolute;inset:-40px;z-index:-1;
+    background:radial-gradient(circle at 50% 40%, rgba(139,92,246,0.35), transparent 65%);
+    filter:blur(10px);
+  }
+  .hero-visual-tag{
+    position:absolute;bottom:16px;left:16px;right:16px;
+    display:flex;justify-content:space-between;align-items:center;
+    background:rgba(8,8,10,0.6);
+    backdrop-filter:blur(10px);
+    border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;
+  }
+  .hero-visual-tag-name{font-size:13px;font-weight:600;}
+  .hero-visual-tag-live{
+    display:flex;align-items:center;gap:6px;
+    font-family:var(--mono);font-size:10.5px;color:var(--green);letter-spacing:0.06em;
+  }
+  .hero-visual-tag-live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px 1px var(--green);}
+
+  /* ---------- SECTION SHARED ---------- */
+  section{padding:120px 0;}
+  .section-head{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    margin-bottom:56px;gap:24px;flex-wrap:wrap;
+    border-bottom:1px solid var(--line-soft);
+    padding-bottom:28px;
+  }
+  h2{font-family:var(--display);font-size:clamp(30px,5vw,50px);line-height:1;}
+
+  /* ---------- ABOUT ---------- */
+  .about-grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:0;}
+  .about-text{padding-right:56px;border-right:1px solid var(--line-soft);}
+  .about-text p{font-size:18px;line-height:1.8;color:#cbc9cd;margin-bottom:22px;}
+  .about-text p:first-child{
+    font-size:22px;color:var(--fg);font-weight:500;line-height:1.5;
+  }
+  .about-text p:last-child{margin-bottom:0;}
+
+  .facts-list{padding-left:56px;display:flex;flex-direction:column;}
+  .fact{padding:22px 0;border-bottom:1px solid var(--line-soft);display:flex;justify-content:space-between;align-items:baseline;gap:16px;}
+  .fact:first-child{padding-top:0;}
+  .fact:last-child{border-bottom:none;}
+  .fact-label{font-family:var(--mono);font-size:11px;color:var(--fg-dim);letter-spacing:0.06em;white-space:nowrap;}
+  .fact-value{font-size:16px;font-weight:500;text-align:right;}
+
+  /* ---------- RELEASES ---------- */
+  .release-row{
+    display:flex;align-items:center;gap:26px;
+    padding:28px 4px;
+    border-bottom:1px solid var(--line-soft);
+    text-decoration:none;color:var(--fg);
+    transition:padding-left .25s;
+  }
+  .release-row:hover{padding-left:14px;}
+  .release-index{font-family:var(--mono);font-size:13px;color:var(--fg-dim);width:26px;flex-shrink:0;}
+  .release-cover{width:64px;height:64px;border-radius:10px;overflow:hidden;background:var(--bg-2);flex-shrink:0;}
+  .release-cover img{width:100%;height:100%;object-fit:cover;display:block;}
+  .release-cover.empty{border:1px dashed var(--line);}
+  .release-name-wrap{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1;}
+  .release-name{font-size:21px;font-weight:600;letter-spacing:-0.01em;}
+  .release-artist{font-family:var(--mono);font-size:12px;color:var(--fg-dim);}
+  .release-listen-btn{
+    font-family:var(--mono);
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12.5px;font-weight:500;
+    color:var(--fg);background:transparent;
+    border:1px solid var(--line);
+    padding:11px 18px;border-radius:100px;
+    white-space:nowrap;flex-shrink:0;
+    transition:border-color .2s, background .2s, color .2s;
+  }
+  .release-row:hover .release-listen-btn{border-color:var(--green);color:var(--green);background:rgba(62,224,138,0.08);}
+
+  /* ---------- CONTACT ---------- */
+  .contact-split{display:grid;grid-template-columns:1.3fr 0.7fr;gap:56px;align-items:end;}
+  .contact-lead{
+    font-size:clamp(30px,4.4vw,52px);
+    font-family:var(--display);
+    line-height:1.12;
+  }
+  .contact-lead .accent{color:var(--purple);}
+  .contact-item{
+    display:block;
+    padding:24px 0;border-top:1px solid var(--line-soft);
+    text-decoration:none;color:var(--fg);
+  }
+  .contact-item-label{font-family:var(--mono);font-size:11px;color:var(--fg-dim);letter-spacing:0.06em;margin-bottom:8px;}
+  .contact-item-value{font-size:20px;font-weight:600;transition:color .2s;}
+  .contact-item:hover .contact-item-value{color:var(--pink);}
+
+  footer{
+    padding:36px 0 52px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:var(--mono);font-size:11px;color:var(--fg-dim);
+    flex-wrap:wrap;gap:12px;
+    border-top:1px solid var(--line-soft);
+    letter-spacing:0.02em;
+  }
+
+  @media (max-width:900px){
+    .hero-inner{grid-template-columns:1fr;}
+    .hero-visual{order:-1;max-width:280px;margin:0 auto;}
+    .about-grid{grid-template-columns:1fr;}
+    .about-text{padding-right:0;border-right:none;padding-bottom:36px;border-bottom:1px solid var(--line-soft);margin-bottom:36px;}
+    .facts-list{padding-left:0;}
+    .contact-split{grid-template-columns:1fr;gap:32px;}
+  }
+  @media (max-width:520px){
+    .release-row{gap:14px;padding:20px 0;}
+    .release-cover{width:52px;height:52px;}
+    .release-name{font-size:17px;}
+    .fact{flex-direction:column;align-items:flex-start;gap:6px;}
+    .fact-value{text-align:left;}
+  }
+</style>
+</head>
+<body>
+
+<div class="mesh"></div>
+
+<div class="pa-banner">
+  <div class="pa-banner-track">
+    <span><b>PARENTAL ADVISORY</b> — EXPLICIT CONTENT</span>
+    <span><b>PARENTAL ADVISORY</b> — EXPLICIT CONTENT</span>
+    <span><b>PARENTAL ADVISORY</b> — EXPLICIT CONTENT</span>
+    <span><b>PARENTAL ADVISORY</b> — EXPLICIT CONTENT</span>
+    <span><b>PARENTAL ADVISORY</b> — EXPLICIT CONTENT</span>
+    <span><b>PARENTAL ADVISORY</b> — EXPLICIT CONTENT</span>
+    <span><b>PARENTAL ADVISORY</b> — EXPLICIT CONTENT</span>
+    <span><b>PARENTAL ADVISORY</b> — EXPLICIT CONTENT</span>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-mark"><span class="nav-dot"></span>QXNTRUM</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#releases">Releases</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow-row">
+        <div class="eyebrow">First single out now</div>
+        <div class="hero-index">( 00 )</div>
+      </div>
+
+      <div class="glitchwrap">
+        <h1 class="title">
+          QXNTRUM
+          <span class="layer purple">QXNTRUM</span>
+          <span class="layer orange">QXNTRUM</span>
+        </h1>
+      </div>
+
+      <p class="hero-sub">
+        Music project by Danylo Heraimovych. First single "Faz O Sinal Funk" is out now — more tracks are being written as this page grows.
+      </p>
+      <div class="hero-real-name">Real name — <b>Danylo Heraimovych</b></div>
+
+      <div class="hero-actions">
+        <a class="hero-cta" href="https://open.spotify.com/artist/0fbBykdsJdBxvszxlascHq" target="_blank" rel="noopener">Spotify profile</a>
+        <div class="platform-row">
+          <a class="platform-pill" href="https://link.deezer.com/s/34vARyKPxHbkYQ5sBlpR9" target="_blank" rel="noopener">Deezer</a>
+          <a class="platform-pill" href="https://music.amazon.com/artists/B0HKRT8ZP4?ref=dm_sh_QYHzOtJDpCMM5npBwK3iJhupg" target="_blank" rel="noopener">Amazon Music</a>
+          <a class="platform-pill" href="https://tidal.com/artist/86666603/u" target="_blank" rel="noopener">TIDAL</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-visual-glow"></div>
+      <div class="hero-visual-frame">
+        <img src="assets/faz-o-sinal-cover.jpg" alt="Faz O Sinal Funk cover">
+        <div class="hero-visual-tag">
+          <div class="hero-visual-tag-name">Faz O Sinal Funk</div>
+          <div class="hero-visual-tag-live">LIVE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>About</h2>
+      <div class="eyebrow">( 01 )</div>
+    </div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>
+          QXNTRUM is the recording name of Danylo Heraimovych — a project built to put sound to ideas that didn't fit anywhere else.
+        </p>
+        <p>
+          It's early, it's hands-on, and everything here is being built one track at a time. No finished catalogue yet, no polished bio — just a producer at the start of something, documenting it as it happens instead of waiting for it to be "ready."
+        </p>
+      </div>
+      <div class="facts-list">
+        <div class="fact">
+          <div class="fact-label">ARTIST NAME</div>
+          <div class="fact-value">QXNTRUM</div>
+        </div>
+        <div class="fact">
+          <div class="fact-label">REAL NAME</div>
+          <div class="fact-value">Danylo Heraimovych</div>
+        </div>
+        <div class="fact">
+          <div class="fact-label">STATUS</div>
+          <div class="fact-value">First single out, writing the next</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="releases">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Releases</h2>
+      <div class="eyebrow">( 02 )</div>
+    </div>
+
+    <a class="release-row" href="https://open.spotify.com/track/6g9bGI7svupQuu9vdNtRuF?si=0l4J-R3HTn2lEr8Qb83jVw&utm_source=copy-link" target="_blank" rel="noopener">
+      <div class="release-index">01</div>
+      <div class="release-cover"><img src="assets/faz-o-sinal-cover.jpg" alt="Faz O Sinal Funk cover"></div>
+      <div class="release-name-wrap">
+        <div class="release-name">Faz O Sinal Funk</div>
+        <div class="release-artist">qxntrum</div>
+      </div>
+      <div class="release-listen-btn">Listen on Spotify</div>
+    </a>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Contact</h2>
+      <div class="eyebrow">( 03 )</div>
+    </div>
+    <div class="contact-split">
+      <div class="contact-lead">
+        For bookings, features, or just to talk music — <span class="accent">reach out directly.</span>
+      </div>
+      <div>
+        <a class="contact-item" href="mailto:qxntrum@gmail.com">
+          <div class="contact-item-label">EMAIL</div>
+          <div class="contact-item-value">qxntrum@gmail.com</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="display:flex;justify-content:space-between;width:100%;flex-wrap:wrap;gap:12px;">
+    <div>QXNTRUM — DANYLO HERAIMOVYCH</div>
+    <div>© 2026</div>
+  </div>
+</footer>
+
+</body>
+</html>
